@@ -4,4 +4,4 @@ out = 'out'
 libs = ['lib']
 optimizer = true
 optimizer_runs = 10_000_000
-solc_version = "0.8.16"
+solc_version = "0.8.19"
