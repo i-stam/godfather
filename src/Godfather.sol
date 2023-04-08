@@ -8,13 +8,13 @@ contract Godfather {
     event Received(address, uint256);
     event Withdrawal(address, uint256);
 
-    address immutable godfather;
+    address immutable public godfather;
 
-    uint256 unlockDate;
+    uint256 public unlockDate;
     address payable godchild;
 
-    constructor(address _godfather, uint256 _unlock) {
-        godfather = _godfather;
+    constructor(uint256 _unlock) {
+        godfather = msg.sender;
         unlockDate = _unlock;
     }
 
