@@ -7,6 +7,8 @@ import {Godfather} from "../src/Godfather.sol";
 
 contract TestGodfather is Test {
 
+    event Received(address, uint256);
+
     uint256 UNLOCK_TIMESTAMP = 1712560861;
 
     Godfather vault;
@@ -15,10 +17,11 @@ contract TestGodfather is Test {
     uint256 testAmount = 1e18;
 
     function setUp() public {
-        godfather = address(1);
+        godfather = payable(address(1));
         vm.label(godfather, "Godfather");
-        vm.deal(godfather, testAmount);
-        godchild = vm.addr(1);
+        vm.deal(godfather, testAmount); //fund account
+
+        godchild = address(2);
         vm.label(godchild, "Godchild");
 
         vm.prank(godfather);
@@ -33,6 +36,9 @@ contract TestGodfather is Test {
     function test_Receive() public {
         vm.expectEmit(false, false, false, true);
         vm.prank(godfather);
-        address(vault).call{value: testAmount}("");
+        payable(vault).transfer(testAmount);
+        emit Received(godfather, testAmount);
+        assertEq(address(vault).balance, testAmount);
     }
+
 }
