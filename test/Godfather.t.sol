@@ -41,4 +41,16 @@ contract TestGodfather is Test {
         assertEq(address(vault).balance, testAmount);
     }
 
+    function test_Withdraw_RevertWhen_NotGodchild() public {
+        vm.prank(godfather);
+        vm.expectRevert(abi.encodeWithSelector(Godfather.CannotWithdraw.selector));
+        vault.withdraw();
+    }
+
+    function test_Withdraw_RevertWhen_NotUnlocked() public {
+        vm.prank(godchild);
+        vm.expectRevert(abi.encodeWithSelector(Godfather.CannotWithdraw.selector));
+        vault.withdraw();
+    }
+
 }

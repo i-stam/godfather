@@ -3,7 +3,7 @@ pragma solidity ^0.8.19;
 
 contract Godfather {
 
-    error CannotWithdraw(address);
+    error CannotWithdraw();
 
     event Received(address, uint256);
     event Withdrawal(address, uint256);
@@ -24,7 +24,10 @@ contract Godfather {
 
     function withdraw() external {
         if (msg.sender != godchild) {
-            revert CannotWithdraw(msg.sender);
+            revert CannotWithdraw();
+        }
+         if (block.timestamp < unlockDate) {
+            revert CannotWithdraw();
         }
         uint256 contractBalance = address(this).balance;
         godchild.transfer(contractBalance);
