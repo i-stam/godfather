@@ -3,15 +3,18 @@ pragma solidity ^0.8.19;
 
 contract Godfather {
 
-    error CannotWithdraw();
+    error NotGodchild(address acount);
+    error NotGodfather(address acount);
+    error Locked();
 
     event Received(address, uint256);
     event Withdrawal(address, uint256);
+    event NewGodchild(address);
 
     address immutable public godfather;
 
     uint256 public unlockDate;
-    address payable godchild;
+    address payable public godchild;
 
     constructor(uint256 _unlock) {
         godfather = msg.sender;
@@ -24,14 +27,21 @@ contract Godfather {
 
     function withdraw() external {
         if (msg.sender != godchild) {
-            revert CannotWithdraw();
+            revert NotGodchild(msg.sender);
         }
          if (block.timestamp < unlockDate) {
-            revert CannotWithdraw();
+            revert Locked();
         }
         uint256 contractBalance = address(this).balance;
         godchild.transfer(contractBalance);
         emit Withdrawal(msg.sender, contractBalance);
     }
 
+    function setGodchild(address payable _godchild) external {
+        if (msg.sender != godfather) {
+            revert NotGodfather(msg.sender);
+        }
+        godchild = _godchild;
+        emit NewGodchild(_godchild);
+    }
 }
