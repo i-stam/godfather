@@ -9,6 +9,7 @@ contract TestGodfather is Test {
 
     event Received(address, uint256);
     event NewGodchild(address);
+    event Withdrawal(address, uint256);
 
     uint256 UNLOCK_TIMESTAMP = 1712560861;
 
@@ -58,6 +59,19 @@ contract TestGodfather is Test {
         vm.prank(godchild);
         vm.expectRevert(abi.encodeWithSelector(Godfather.Locked.selector));
         vault.withdraw();
+    }
+
+    function test_Withdraw() public {
+        vm.startPrank(godfather);
+        vault.setGodchild(godchild);
+        payable(vault).transfer(testAmount);
+        vm.stopPrank();
+        vm.expectEmit(false, false, false, true);
+        emit Withdrawal(godchild, testAmount);
+        vm.warp(UNLOCK_TIMESTAMP);
+        vm.prank(godchild);
+        vault.withdraw();
+        assertEq(godchild.balance, testAmount);
     }
 
     /*******    SetGodchild     *******/
