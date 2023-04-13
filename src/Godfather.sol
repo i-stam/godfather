@@ -3,9 +3,10 @@ pragma solidity ^0.8.19;
 
 contract Godfather {
 
-    error NotGodchild(address acount);
-    error NotGodfather(address acount);
     error Locked();
+    error GodchildCannotBeGodfather();
+    error NotGodchild(address account);
+    error NotGodfather(address account);
 
     event Received(address, uint256);
     event Withdrawal(address, uint256);
@@ -38,8 +39,12 @@ contract Godfather {
     }
 
     function setGodchild(address payable _godchild) external {
-        if (msg.sender != godfather) {
+        address payable  _godfather = payable(godfather);
+        if (msg.sender != _godfather) {
             revert NotGodfather(msg.sender);
+        }
+        if (_godchild == _godfather) {
+            revert GodchildCannotBeGodfather();
         }
         godchild = _godchild;
         emit NewGodchild(_godchild);

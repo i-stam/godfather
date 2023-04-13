@@ -62,10 +62,16 @@ contract TestGodfather is Test {
 
     /*******    SetGodchild     *******/
 
-    function test_SetGodchild_RevertWhen_NotGodfather() public {
+    function test_SetGodchild_RevertWhen_SenderNotGodfather() public {
         vm.prank(godchild);
         vm.expectRevert(abi.encodeWithSelector(Godfather.NotGodfather.selector, godchild));
         vault.setGodchild(godchild);
+    }
+
+    function test_SetGodchild_RevertWhen_GodchildIsGodfather() public {
+        vm.prank(godfather);
+        vm.expectRevert(abi.encodeWithSelector(Godfather.GodchildCannotBeGodfather.selector));
+        vault.setGodchild(godfather);
     }
     
     function test_SetGodchild() public {
