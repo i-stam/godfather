@@ -12,13 +12,15 @@ contract Godfather {
     event NewGodchild(address);
 
     address immutable public godfather;
-
+    
     uint256 public unlockDate;
     address payable public godchild;
+    string public name;
 
-    constructor(uint256 _unlock) {
+    constructor(uint256 _unlock, string memory _name) {
         godfather = msg.sender;
         unlockDate = _unlock;
+        name = _name;
     }
 
     receive() external payable {

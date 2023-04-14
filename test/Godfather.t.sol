@@ -27,12 +27,13 @@ contract TestGodfather is Test {
         vm.label(godchild, "Godchild");
 
         vm.prank(godfather);
-        vault = new Godfather(UNLOCK_TIMESTAMP);
+        vault = new Godfather(UNLOCK_TIMESTAMP, "Dinosauros");
     }
 
     function test_Setup() public {
         assertEq(vault.godfather(), godfather);
         assertEq(vault.unlockDate(), UNLOCK_TIMESTAMP);
+        assertEq(vault.name(), "Dinosauros");
     }
 
     /*******    Receive     *******/
