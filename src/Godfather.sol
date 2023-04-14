@@ -4,7 +4,6 @@ pragma solidity ^0.8.19;
 contract Godfather {
 
     error Locked();
-    error GodchildCannotBeGodfather();
     error NotGodchild(address account);
     error NotGodfather(address account);
 
@@ -42,9 +41,6 @@ contract Godfather {
         address payable  _godfather = payable(godfather);
         if (msg.sender != _godfather) {
             revert NotGodfather(msg.sender);
-        }
-        if (_godchild == _godfather) {
-            revert GodchildCannotBeGodfather();
         }
         godchild = _godchild;
         emit NewGodchild(_godchild);
